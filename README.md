@@ -12,6 +12,10 @@ The **Likes** post type includes support for the [Webmention](https://wordpress.
 
 ## Changelog
 
+### 1.0.1
+
+* Account for likes published with the Micropub plugin.
+
 ### 1.0.0
 
 * Initial release.
