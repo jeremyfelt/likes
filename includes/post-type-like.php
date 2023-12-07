@@ -168,7 +168,13 @@ function filter_content( string $content ): string {
 		return $content;
 	}
 
-	$url   = get_post_meta( get_the_ID(), 'like_of_url', true );
+	$url = get_post_meta( get_the_ID(), 'like_of_url', true );
+
+	// Account for likes published via the Micropub plugin.
+	if ( ! $url ) {
+		$url = get_post_meta( get_the_ID(), 'mf2_like-of', true );
+	}
+
 	$url   = is_array( $url ) ? array_pop( $url ) : $url;
 	$title = get_the_title();
 	$title = $title ? $title : $url; // Fall back to the URL if a title is not available.
