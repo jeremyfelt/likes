@@ -66,13 +66,31 @@ function register_meta_boxes( WP_Post $post ): void {
 }
 
 /**
+ * Retrieve the URL associated with a like.
+ *
+ * @param int $post_id The ID of the current like.
+ * @return string The URL associated with the like.
+ */
+function get_like_url( int $post_id ): string {
+	$url = get_post_meta( $post_id, 'like_of_url', true );
+
+	// Account for likes published via the Micropub plugin.
+	if ( ! $url ) {
+		$url = get_post_meta( $post_id, 'mf2_like-of', true );
+	}
+
+	$url = is_array( $url ) ? array_pop( $url ) : $url;
+
+	return $url;
+}
+
+/**
  * Display the meta box used to capture like data.
  *
  * @param WP_Post $post The current like being edited.
  */
 function display_meta_box( WP_Post $post ): void {
-	$url = get_post_meta( $post->ID, 'like_of_url', true );
-	$url = is_array( $url ) ? array_pop( $url ) : $url;
+	$url = get_like_url( $post->ID );
 
 	wp_nonce_field( 'save-like-data', 'like_data_nonce' );
 	?>
@@ -146,8 +164,7 @@ function filter_webmention_links( array $urls, int $post_id ): array {
 	$post = get_post( $post_id );
 
 	if ( $post && get_slug() === $post->post_type ) {
-		$url = get_post_meta( $post_id, 'like_of_url', true );
-		$url = is_array( $url ) ? array_pop( $url ) : $url;
+		$url = get_like_url( $post_id );
 
 		if ( '' !== $url ) {
 			$urls[] = $url;
@@ -168,14 +185,7 @@ function filter_content( string $content ): string {
 		return $content;
 	}
 
-	$url = get_post_meta( get_the_ID(), 'like_of_url', true );
-
-	// Account for likes published via the Micropub plugin.
-	if ( ! $url ) {
-		$url = get_post_meta( get_the_ID(), 'mf2_like-of', true );
-	}
-
-	$url   = is_array( $url ) ? array_pop( $url ) : $url;
+	$url   = get_like_url( get_the_ID() );
 	$title = get_the_title();
 	$title = $title ? $title : $url; // Fall back to the URL if a title is not available.
 	$host  = wp_parse_url( $url, PHP_URL_HOST );
