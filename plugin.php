@@ -7,7 +7,7 @@
  * Author URI:      https://jeremyfelt.com
  * Text Domain:     likes
  * Domain Path:     /languages
- * Version:         1.0.1
+ * Version:         1.0.2
  * License:         GPLv2 or later
  * License URI:     https://www.gnu.org/licenses/gpl-2.0.html
  *
