@@ -46,6 +46,7 @@ function register(): void {
 			'public'               => true,
 			'menu_position'        => 6,
 			'menu_icon'            => 'dashicons-star-filled',
+			'show_in_rest'         => true,
 			'supports'             => false,
 			'register_meta_box_cb' => __NAMESPACE__ . '\register_meta_boxes',
 			'has_archive'          => true,
